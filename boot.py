@@ -43,7 +43,7 @@ wifi = network.WLAN(network.STA_IF);
 # Create wifi class
 wifi.active(True) 
 # Activate interface
-wifi.connect('AppleRouter', 'Boglya2018')
+wifi.connect('Buszkulso', 'sostososto69')
 
 # Wait until connected to wifi
 while not wifi.isconnected(): pass 
