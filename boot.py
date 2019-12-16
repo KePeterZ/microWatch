@@ -8,6 +8,7 @@ import usocket as socket
 
 # Declare NeoPixel LED as "l"
 l = NeoPixel(Pin(15, Pin.OUT), 1) 
+l[0] = (0, 0, 0); l.write()
 # create NeoPixel driver on GPIO0 for 1 pixel
 
 # Declare display variables as "d"
@@ -17,8 +18,8 @@ d = sh1106.SH1106_I2C(
 # Rotate screen into correct orientation
 d.rotate(180)
 
-dtext = lambda string, row : d.text(str(string), int((132-len(string)*8)/2)-8, row, 1)
-btext = lambda string, row : d.text(string, int((132-len(string)*8)/2)-8, row, 1)
+dtext = lambda string, row : d.text(str(string), int((132-len(string)*8)/2), row, 1)
+btext = lambda string, row : d.text(string, int((132-len(string)*8)/2), row, 1)
 
 dtext("Made by", 16)
 dtext("KePeterZ", 24)
