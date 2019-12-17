@@ -21,11 +21,22 @@ d.rotate(180)
 dtext = lambda string, row : d.text(str(string), int((132-len(string)*8)/2), row, 1)
 btext = lambda string, row : d.text(string, int((132-len(string)*8)/2), row, 1)
 
-dtext("Made by", 16)
-dtext("KePeterZ", 24)
-dtext("Connecting", 40)
-with open("./now.config", "r") as w: wifiNetwork = w.readline().strip().split(":")[0]
-dtext(wifiNetwork, 48)
+def getFile(fileLoc, RorW="r", whatToWrite=None):
+    if RorW == "r":
+        with open(fileLoc, "r") as fileThing:
+            return fileThing.readline().strip()
+    elif RorW == "w":
+        with open(fileLoc, "w") as fileThing:
+            fileThing.write(whatToWrite)
+            return True
+
+wifiNetwork = getFile("/now.config", "r")
+dtext("Made by", 8)
+dtext("KePeterZ", 16)
+dtext("Connecting", 32)
+dtext(wifiNetwork.split(":")[0], 40)
+try: dtext(wifiNetwork.split(":")[1], 48)
+except: pass
 d.show()
 
 buttons = {
@@ -39,6 +50,19 @@ for button in buttons.keys():
     exec(
         button+
         "Button = Pin(buttons[button], Pin.IN, Pin.PULL_UP)")
+
+# If rightButton pressed on bootup, reflash main.py to working one
+if not rightButton.value():
+    d.fill(0)
+    dtext("FLASING", 16)
+    dtext("BACK", 24)
+    d.show()
+    workingCodeFile = open("/mainWorking.py", "r")
+    lastCode = workingCodeFile.readlines()
+    workingCodeFile.close()
+    newMain = open("/main.py", "w")
+    for line in lastCode: newMain.write(line)
+    newMain.close()
 
 # Declare network parameters as "wifi" 
 wifi = network.WLAN(network.STA_IF); 

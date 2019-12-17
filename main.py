@@ -136,20 +136,16 @@ if firstMenu == "Time":
             l[0] = (0, 0, 0)
             l.write()
             time.sleep(0.5)
-    # elif timeMenu == "Stopwatch":
-    #     t1 = time.time()
-    #     while True:
-    #         d.fill(0)
-    #         d.text(str(time.time() - t1), 0, 0, 1)
-    #         d.show()
     elif timeMenu == "Faces":
         faceMenu = menu(["Programmer"])
         if faceMenu == "Programmer":
             hours = addZeroes(time.localtime()[3]+1)
             minutes = addZeroes(time.localtime()[4])
             seconds = addZeroes(time.localtime()[5])
-            # d.text("root@watch$ now", 0, 0, 1)
-            # d.show()
+            d.text("root@watch$ now", 0, 0, 1)
+            # t = sendSystemCmd('cmd-date').split(" ")[4] #.split(":")
+            # d.text(t, 0, 8, 1)
+            d.show()
 elif firstMenu == "Wifi info":
     colNums = [0, 8, 16, 24, 32, 40, 48, 56]
     while not wifi.isconnected(): pass 
@@ -161,9 +157,11 @@ elif firstMenu == "Select Wifi":
         wifiList = wifiConfig.read().split("\n")
         selectWifi = menu(wifiList)
         with open("./now.config", "w") as w: 
-            dtext(selectWifi, 24)
-            d.show()
             w.write(selectWifi)
+            dtext("Wifi Set:", 16)
+            dtext(selectWifi.split(":")[0], 24)
+            # dtext(selectWifi.split(":")[1], 24)
+            d.show()
 elif firstMenu == "Siren":
     while True:
         for c in range(254):
@@ -174,15 +172,9 @@ elif firstMenu == "Siren":
             l.write()
 elif firstMenu == "Client":
     while not wifi.isconnected(): pass 
-    s = socket.socket()
-    s.connect(socket.getaddrinfo("192.168.0.33", 445)[0][-1])
-    s.sendall(b'Hello, world')
-    data = s.recv(1024).decode('utf-8')
-    s.close()
-    # d.fill(0)
-    # d.text(data, 0, 0, 1)
-    # d.show()
+    data = sendSystemCmd('cmd-date')
     dtext2(data, 0, 0)
+    d.show()
 elif firstMenu == "Weather":
     while not wifi.isconnected(): pass 
     s = socket.socket()
