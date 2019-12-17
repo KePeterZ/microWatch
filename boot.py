@@ -24,6 +24,8 @@ btext = lambda string, row : d.text(string, int((132-len(string)*8)/2), row, 1)
 dtext("Made by", 16)
 dtext("KePeterZ", 24)
 dtext("Connecting", 40)
+with open("./now.config", "r") as w: wifiNetwork = w.readline().strip().split(":")[0]
+dtext(wifiNetwork, 48)
 d.show()
 
 buttons = {
@@ -43,7 +45,14 @@ wifi = network.WLAN(network.STA_IF);
 # Create wifi class
 wifi.active(True) 
 # Activate interface
-wifi.connect('Buszkulso', 'sostososto69')
+with open("./now.config", "r") as w: wifiNetwork = w.readline().strip().split(":")
+try: wifi.connect(wifiNetwork[0], wifiNetwork[1])
+except: wifi.connect(wifiNetwork[0])
 
 # Wait until connected to wifi
-while not wifi.isconnected(): pass 
+# But set timeout to 3 seconds
+# t1 = time.time()
+# while not wifi.isconnected(): pass 
+# while True:
+#     if time.time()-t1 > 1: break
+#     if wifi.isconnected(): break

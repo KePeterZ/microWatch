@@ -83,15 +83,14 @@ if firstMenu == "LEDs":
 if firstMenu == "Networking":
     firstMenu = menu(["Client", "Weather"])
 if firstMenu == "Settings":
-    firstMenu = menu(["Wifi info"])
+    firstMenu = menu(["Wifi info", "Select Wifi"])
 
 if firstMenu == "Time":
-    timeMenu = menu(["Clock", "Timer", "Stopwatch"])
+    timeMenu = menu(["Clock", "Timer", "Stopwatch", "Faces"])
     if timeMenu == "Clock":
         while not wifi.isconnected(): pass 
         import ntptime
-        try: ntptime.settime()
-        except: pass
+        ntptime.settime()
         while True:
             d.fill(0)
             dtext("%s:%s:%s" % (
@@ -100,9 +99,9 @@ if firstMenu == "Time":
                 addZeroes(time.localtime()[5])
             ), 16)
             dtext("%i. %i. %i." % (
-                addZeroes(time.localtime()[0]), 
-                addZeroes(time.localtime()[1]),
-                addZeroes(time.localtime()[2])
+                time.localtime()[0], 
+                time.localtime()[1],
+                time.localtime()[2]
             ), 40)
             try: d.rect(2, 2, 124, 62, 1)
             except: pass
@@ -137,14 +136,34 @@ if firstMenu == "Time":
             l[0] = (0, 0, 0)
             l.write()
             time.sleep(0.5)
-    elif timeMenu == "Stopwatch":
-        pass
+    # elif timeMenu == "Stopwatch":
+    #     t1 = time.time()
+    #     while True:
+    #         d.fill(0)
+    #         d.text(str(time.time() - t1), 0, 0, 1)
+    #         d.show()
+    elif timeMenu == "Faces":
+        faceMenu = menu(["Programmer"])
+        if faceMenu == "Programmer":
+            hours = addZeroes(time.localtime()[3]+1)
+            minutes = addZeroes(time.localtime()[4])
+            seconds = addZeroes(time.localtime()[5])
+            # d.text("root@watch$ now", 0, 0, 1)
+            # d.show()
 elif firstMenu == "Wifi info":
     colNums = [0, 8, 16, 24, 32, 40, 48, 56]
     while not wifi.isconnected(): pass 
     for col in range(3):
         d.text(wifi.ifconfig()[col], 0, colNums[col], 1)
     d.show()
+elif firstMenu == "Select Wifi":
+    with open("./wifi.config", "r") as wifiConfig:
+        wifiList = wifiConfig.read().split("\n")
+        selectWifi = menu(wifiList)
+        with open("./now.config", "w") as w: 
+            dtext(selectWifi, 24)
+            d.show()
+            w.write(selectWifi)
 elif firstMenu == "Siren":
     while True:
         for c in range(254):
